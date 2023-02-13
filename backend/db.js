@@ -1,11 +1,16 @@
 const mongooes = require('mongoose');
-const mongURI = "mongodb://localhost:27017/inotebook";
+require('dotenv').config()
+const mongURI = process.env.DATABASEURL;
+    const connectToMongo = async() => { //with callback function can alse=o be used with async and await
 
-const connectToMongo = () => { //with callback function can alse=o be used with async and await
+        try {
+            await mongooes.connect(mongURI);
+            console.log("connected to database");
+          } catch (error) {
+            console.log(error);
+          }
+        };
+    module.exports = connectToMongo;
+    
 
-    mongooes.connect(mongURI, () => {
-        console.log("connected to mongo sucessful");
-    })
-}
 
-module.exports = connectToMongo;

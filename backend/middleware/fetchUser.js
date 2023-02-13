@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-
-const JWT_SCERET = "helloAkki@B$y"; //store in env variable // not to be shown to anyone
+require('dotenv').config()
+const JWT_SCERET = process.env.JWT_KEY; //store in env variable // not to be shown to anyone
 
 
 const fetchuser=(req,res,next)=>{

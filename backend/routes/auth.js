@@ -1,17 +1,17 @@
 const express = require('express');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
-const { json } = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 var fetchuser = require('../middleware/fetchUser')
 
-const JWT_SCERET = "helloAkki@B$y";
+require('dotenv').config()
+const JWT_SCERET = process.env.JWT_KEY;
 
 
 //Route 1: create a user useing the post "/api/auth/createUser".  Doesn't require auth
-router.post('/createUser', [
+router.post('/createuser', [
     body('email', 'enter a valid email').isEmail(), //express
     body('name', 'enter a valid name').isLength({ min: 3 }),
     body('password', 'password must be of 5 character').isLength({ min: 8 }),
@@ -26,7 +26,7 @@ router.post('/createUser', [
     // check if user with same email exist or not
 
     try {
-        sucess = false
+        let sucess = false
         let user = await User.findOne({ email: req.body.email });
         if (user) {
             return res.status(400).json({ sucess, errors: "user with this email is already exists" });
@@ -69,7 +69,7 @@ router.post('/login', [
     //if errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() }); ''
+        return res.status(400).json({ errors: errors.array() });
     }
     const { email, password } = req.body;
     try {
@@ -80,7 +80,7 @@ router.post('/login', [
 
         const passwordCompare = await bcrypt.compare(password, user.password);
 
-        sucess = false
+       let sucess = false
 
         if (!passwordCompare) {
             return res.status(400).json({ sucess, errors: "invalid Credentials" });
@@ -105,7 +105,7 @@ router.post('/login', [
 router.post('/getuser', fetchuser, async (req, res) => {
 
     try {
-        userId = req.user.id;
+       let userId = req.user.id;
         const user = await User.findById(userId).select("-password")
         res.send(user)
     } catch (error) {
